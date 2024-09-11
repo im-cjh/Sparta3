@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model items {
+  item_code    Int            @id
+  item_name    String         @db.VarChar(30)
+  item_price   Int            @default(0)
+  items_detail items_detail[]
+}
+
+model items_detail {
+  item_code  Int
+  stat_code  Int
+  stat_value Int?
+  items      items @relation(fields: [item_code], references: [item_code], onUpdate: Restrict, map: "itemDetail_itemCode")
+
+  @@id([item_code, stat_code])
+}
+
+model users {
+  email    String  @id @db.VarChar(20)
+  password String? @db.VarChar(16)
+  nickname String  @db.VarChar(20)
+}
