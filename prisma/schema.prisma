@@ -24,7 +24,20 @@ model items_detail {
 }
 
 model users {
-  email    String  @id @db.VarChar(20)
-  password String? @db.VarChar(16)
-  nickname String  @db.VarChar(20)
+  ID         String       @id @db.VarChar(20)
+  password   String?      @db.Char(60)
+  nickname   String       @db.VarChar(20)
+  characters characters[]
+}
+
+model characters {
+  character_id   Int    @id @default(autoincrement())
+  character_name String @unique(map: "UQ_characterName") @db.VarChar(20)
+  health         Int    @default(500)
+  power          Int    @default(100)
+  money          Int    @default(10000)
+  owner_id       String @db.VarChar(20)
+  users          users  @relation(fields: [owner_id], references: [ID], onUpdate: Restrict, map: "charaters_owerID")
+
+  @@index([owner_id], map: "charaters_owerID")
 }

@@ -1,28 +1,22 @@
 'use strict';
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
+import session from 'express-session';
+import signRouter from './routes/sign.js';
+import characterRouter from './routes/chracters.js'
 
 const app = express();
   
 app.use(express.json());
+app.use(session({
+    secret: process.env.SECRET_KEY,  // 환경 변수에서 비밀 키 가져오기
+    resave: false,
+    saveUninitialized: true,
+}));
 
-const prisma = new PrismaClient({
-    // Prisma를 이용해 데이터베이스를 접근할 때, SQL을 출력해줍니다.
-    log: ['query', 'info', 'warn', 'error'],
-  
-    // 에러 메시지를 평문이 아닌, 개발자가 읽기 쉬운 형태로 출력해줍니다.
-    errorFormat: 'pretty',
-  });
+app.use('/api/sign', signRouter);
+app.use('/api/characters', characterRouter);
 
-const user = await prisma.users.create({
-    data: {
-        email: "cjh@naver.com",
-        password: "0913",
-        nickname: "cjh"
-    },
-});
 
-console.log(user);
 app.set('port', process.env.PORT || 3000);
 
 const server = app.listen(app.get('port'), function () {
