@@ -3,6 +3,7 @@ import express from 'express';
 import session from 'express-session';
 import signRouter from './routes/sign.js';
 import characterRouter from './routes/chracters.js'
+import itemRouter from './routes/item.js';
 
 const app = express();
   
@@ -15,6 +16,7 @@ app.use(session({
 
 app.use('/api/sign', signRouter);
 app.use('/api/characters', characterRouter);
+app.use('/api/items', itemRouter);
 
 
 app.set('port', process.env.PORT || 3000);
